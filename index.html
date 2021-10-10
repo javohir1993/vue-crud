@@ -13,22 +13,7 @@
   <div id="app">
     <div class="header">
 
-      <select v-model="selectedTypeId">
-        <option value="0" selected disabled>Select type</option>
-        <option v-for="type in prTypes" :value="type.id">
-
-          {{type.name_uz}}
-
-        </option>
-      </select>
-      <input type="text" v-model="name" placeholder="name">
-      <input type="number" v-model="cost" placeholder="cost">
-      <input type="text" v-model="address" placeholder="address">
-
-      <button type="button" @click="createItem()" v-if="id == null"> Create </button>
-      <button type="button" @click="editItem()" v-else> Edit </button>
-
-      <p class="resData" style="height: 20px;">{{ resData }}</p>
+      <button type="button" @click="newItem()">Add New Item</button>
 
       <select v-model="sort" v-on:change="sortFn()">
         <option value="0" selected >All</option>
@@ -37,6 +22,12 @@
           {{type.name_uz}}
 
         </option>
+      </select>
+
+      <select v-model="perPage" v-on:change="perPageFn()">
+        <option value="2" selected>per page 2</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
       </select>
 
     </div> <!-- header -->
@@ -70,16 +61,53 @@
       </tbody>
     </table>
 
-    <ul class="pagination-list">
+    <ul class="pagination-list" v-if="sort == 0">
       <li class="pagination-item" v-for="i in dataLength" :key="i">
         <button v-on:click="pgClick(i)">{{i}}</button>
       </li>
     </ul>
 
-    <div class="modal-delete" :class="{active: isActiveModal}" @click="exit()">
-      <div class="modal-delete__dialog">
+    <ul class="pagination-list" v-else>
+      <li class="pagination-item" v-for="i in filteredDataLength" :key="i">
+        <button v-on:click="pgClickSort(i)">{{i}}</button>
+      </li>
+    </ul>
+
+
+    <div class="modal" :class="{active: isActiveModal}">
+      <div class="modal__dialog">
 
         <button class="exitBtn" type="button" @click="exit()">X</button>
+
+        <div class="modal__content">
+
+          <select class="modal__content-item" v-model="selectedTypeId">
+            <option value="0" selected disabled>Select type</option>
+            <option v-for="type in prTypes" :value="type.id">
+
+              {{type.name_uz}}
+
+            </option>
+          </select>
+          <input class="modal__content-item" type="text" v-model="name" placeholder="name">
+          <input class="modal__content-item" type="number" v-model="cost" placeholder="cost">
+          <input class="modal__content-item" type="text" v-model="address" placeholder="address">
+
+          <button class="modal__content-item" type="button" @click="createItem()" v-if="id == null"> Create </button>
+          <button class="modal__content-item" type="button" @click="editItem()" v-else> Edit </button>
+          <button class="modal__content-item" type="button" @click="exit()"> Cancel </button>
+
+          <p class="resData" style="height: 20px;">{{ resData }}</p>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal-delete" :class="{active: isDeleteActiveModal}" @click="exit()">
+      <div class="modal-delete__dialog">
+
+        <button class="exitBtnDelete" type="button" @click="exit()">X</button>
 
         <div class="modal-delete__content">
           <h2>Do you want to delete id is {{ id }}?</h2>

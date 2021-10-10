@@ -11,10 +11,13 @@ var app = new Vue({
     data: [],
     resData: null,
     isActiveModal: false,
+    isDeleteActiveModal: false,
     sort: 0,
     page: 1,
     perPage: 2,
     dataLength: null,
+    filteredData: [],
+    filteredDataLength: 0,
 
   },//data:
 
@@ -25,7 +28,7 @@ var app = new Vue({
       .then(res => {
         this.prTypes = res.data
       });
-    },
+    },//getTypes()
 
     getData() {
       axios.get(`${vars.URL}?page=${this.page}&perPage=${this.perPage}`)
@@ -67,6 +70,7 @@ var app = new Vue({
     },//createItem()
 
     editBtn(item) {
+      this.isActiveModal = true
 
       this.id = item.id
       this.selectedTypeId = item.product_type_id
@@ -88,6 +92,7 @@ var app = new Vue({
         this.resData = res.data
         this.getData()
         this.getDataLength()
+        this.isActiveModal = false,
 
         setTimeout(() => this.resData = null, 2000);
       })
@@ -95,7 +100,7 @@ var app = new Vue({
 
     deleteBtn(id) {
       this.id = id
-      this.isActiveModal = true
+      this.isDeleteActiveModal = true
     },//deleteBtn()
 
     deleteBtnYes() {
@@ -106,17 +111,23 @@ var app = new Vue({
         this.getDataLength()
       })
 
-      this.isActiveModal = false
+      this.isDeleteActiveModal = false
 
       setTimeout(() => this.resData = null, 2000);
     },//deleteBtnYes()
 
     exit() {
+      this.isDeleteActiveModal = false
       this.isActiveModal = false
+
+      this.id = null
+      this.selectedTypeId = 0
+      this.name = null
+      this.cost = null
+      this.address = null
     },//exit()
 
     sortFn() {
-
       axios.get(`${vars.URL}`)
       .then(res => {
         if(this.sort == 0) {
@@ -124,17 +135,30 @@ var app = new Vue({
           this.getDataLength()
           return;
         } else {
-          var filteredData = res.data.filter(d => this.sort == d.product_type_id)
-          this.data = filteredData
+          this.filteredData = res.data.filter(d => this.sort == d.product_type_id)
+          this.filteredDataLength = Math.ceil(this.filteredData.length / this.perPage)
+          this.data = this.filteredData.slice(0, this.perPage)
         }
       })
 
     },//sort
 
+    perPageFn() {
+      this.sortFn()
+    },
+
+    pgClickSort(i) {
+      this.data = this.filteredData.slice((i - 1) * this.perPage, i * this.perPage)
+    },//pgClickSort(i)
+
     pgClick(page) {
       this.page = page
       this.getData()
-    },
+    },//pgClick(page)
+
+    newItem() {
+      this.isActiveModal = true
+    },//newItem()
 
   },// methods:
 
@@ -143,6 +167,5 @@ var app = new Vue({
     this.getData()
     this.getDataLength()
   },//mounted()
-
 
 })

@@ -4,10 +4,6 @@ body {
   font-size: 22px;
   padding: 50px;
 }
-form {
-  display: flex;
-  margin-right: 40px;
-}
 select {
   margin-right: 15px;
   padding: 15px;
@@ -26,6 +22,7 @@ button {
   padding: 10px;
   margin-right: 10px;
   font-size: 20px;
+  cursor: pointer;
 }
 ul {
   list-style-type: none;
@@ -33,11 +30,6 @@ ul {
   padding: 0;
   display: flex;
 }
-.header {
-  display: inline-flex;
-  margin-bottom: 30px;
-}
-
 table {
   text-align: center;
   width: 100%;
@@ -60,6 +52,11 @@ tbody tr td {
 
 }
 
+.header {
+  display: inline-flex;
+  margin-bottom: 30px;
+}
+
 .editBtn{
   background-color: rgb(163, 240, 140);
 }
@@ -73,9 +70,42 @@ tbody tr td {
   font-size: 22px;
 }
 
-.modal-delete {
+.modal {
   position: fixed;
   z-index: 1000;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.active{
+  display: block;
+}
+
+.modal__content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 900px;
+  margin-top: 200px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 10px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.modal__content-item {
+  margin-bottom: 20px;
+}
+
+.modal-delete {
+  position: fixed;
+  z-index: 10;
   display: none;
   top: 0;
   left: 0;
@@ -94,7 +124,7 @@ tbody tr td {
 
 .modal-delete__dialog {
   position: relative;
-  z-index: 10;
+  z-index: 100;
   width: 500px;
   margin-top: 200px;
   margin-right: auto;
@@ -104,13 +134,24 @@ tbody tr td {
   text-align: center;
 }
 
-.exitBtn {
+.exitBtnDelete {
   position: absolute;
   z-index: 1;
   right: 0;
-  top: 10px;
+  top: 0;
   background-color: transparent;
   border: none;
+}
+
+.exitBtn {
+  position: absolute;
+  z-index: 1000;
+  right: 90px;
+  top: 90px;
+  background-color: transparent;
+  border: none;
+  font-size: 50px;
+  color: #fff;
 }
 
 
